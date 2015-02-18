@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -39,13 +40,24 @@ public class MainActivity extends ActionBarActivity {
         new InstaTask().execute();
         GridView gridview = (GridView) findViewById(R.id.gridView);
         gridview.setAdapter(imageAdapter);
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ImageView imageView=(ImageView)view;
+                imageView.setLayoutParams(new GridView.LayoutParams(600,600));
+                imageView.setElevation(5);
+                imageAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     public class ImageAdapter extends BaseAdapter {
         private Context mContext;
+
         public ImageAdapter(Context c) {
             mContext = c;
         }
+
         @Override
         public int getCount() {
             return bitmaps.size();
@@ -67,30 +79,16 @@ public class MainActivity extends ActionBarActivity {
             ImageView imageView;
             if (convertView == null) {  // if it's not recycled, initialize some attributes
                 imageView = new ImageView(mContext);
-
-                imageView.setLayoutParams(new GridView.LayoutParams(bitmaps.get(position).getHeight(),bitmaps.get(position).getWidth()));
+                    imageView.setLayoutParams(new GridView.LayoutParams(300, 300));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                imageView.setPadding(8, 8, 8, 8);
+//                imageView.setPadding(8, 8, 8, 8);
             } else {
                 imageView = (ImageView) convertView;
             }
 
-//            imageView.setImageResource(mThumbIds[position]);
             imageView.setImageBitmap(bitmaps.get(position));
             return imageView;
         }
-//        private Integer[] mThumbIds = {
-//                R.drawable.ic_launcher,  R.drawable.ic_launcher,
-//                R.drawable.ic_launcher, R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,  R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//                R.drawable.ic_launcher,R.drawable.ic_launcher,
-//        };
     }
 
     class InstaTask extends AsyncTask<String,String,ArrayList<Bitmap>>{
